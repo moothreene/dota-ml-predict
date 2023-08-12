@@ -26,6 +26,17 @@ def dict_to_herolist(row, heroes):
     row['picks_dire'] = team_dire
     return row 
 
+def team_id_to_name(row, teams):
+    radiant_team_id = row["radiant_team_id"]
+    dire_team_id = row["dire_team_id"]
+    team_radiant = next(team["name"] for team in teams if team["id"] == radiant_team_id)
+    team_dire = next(team["name"] for team in teams if team["id"] == dire_team_id)
+
+    #adding arrays with hero names to DataFrame row
+    row['team_radiant'] = team_radiant
+    row['team_dire'] = team_dire
+    return row
+
 #splits a columns containing same size arrays into columns containing these arrays' elements
 #df - DataFrame, col_name - name of a target column, num - length of arrays in this column
 def split_array_col(df, col_name, num):
