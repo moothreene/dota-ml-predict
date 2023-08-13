@@ -1,6 +1,6 @@
 import pandas as pd
 
-#reads a dictionary of picks/bans and returns a str array, containing heroes names, according to their id
+#reads a dictionary of picks/bans in pandas row and returns a row with str array, containing heroes names, according to their id
 #row - row in Pandas DataFrame, heroes - dictionary with heroes names and ids
 def dict_to_herolist(row, heroes):
 
@@ -21,20 +21,34 @@ def dict_to_herolist(row, heroes):
                 else:
                     team_dire.append(hero)
 
+
     #adding arrays with hero names to DataFrame row
-    row['picks_radiant'] = team_radiant
-    row['picks_dire'] = team_dire
+    row['picks_radiant'] = sorted(team_radiant)
+    row['picks_dire'] = sorted(team_dire)
     return row 
 
+#gets team id in pandas row and returns a row with a team name according to it's id
+#row - row in Pandas DataFrame, teams - dictionary with team names and ids
 def team_id_to_name(row, teams):
     radiant_team_id = row["radiant_team_id"]
     dire_team_id = row["dire_team_id"]
     team_radiant = next(team["name"] for team in teams if team["id"] == radiant_team_id)
     team_dire = next(team["name"] for team in teams if team["id"] == dire_team_id)
 
-    #adding arrays with hero names to DataFrame row
+    #adding team names to DataFrame row
     row['team_radiant'] = team_radiant
     row['team_dire'] = team_dire
+    return row
+
+
+def team_name_to_id(row, teams):
+    radiant_team_name= row["team_radiant"]
+    dire_team_name = row["team_dire"]
+    team_radiant_id = next(team["id"] for team in teams if team["name"] == radiant_team_name)
+    team_dire_id = next(team["id"] for team in teams if team["name"] == dire_team_name)
+
+    row['radiant_team_id'] = team_radiant_id
+    row['dire_team_id'] = team_dire_id
     return row
 
 #splits a columns containing same size arrays into columns containing these arrays' elements
