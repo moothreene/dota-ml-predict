@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-from dota_parse_picks import *
+from dota_preprocess_initial import *
 from dota_ml import *
 
 #reading json file containing Dota 2 matches into pandas DataFrame
