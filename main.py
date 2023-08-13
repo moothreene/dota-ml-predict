@@ -10,7 +10,7 @@ from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS
 def read_text():
 
     #getting entry data from teams and picks entry widgets and combining them into a single array
-    team_data = [int(input_radiant_teamid.get()), int(input_dire_teamid.get())]
+    team_data = [input_radiant_teamid.get(), input_dire_teamid.get()]
     picks_data = [(entry.get()) for entry in (radiant_inputs + dire_inputs)]
     data = team_data + picks_data
 
