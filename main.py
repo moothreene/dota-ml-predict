@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from tkinter import *
 from ttkwidgets.autocomplete import AutocompleteEntry
-from dota_ml import OH_encode, TEAM_COLUMNS, HERO_COLUMNS, HEROES
+from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS
 
 
 #creates pd dataframe from entry values and predicts value based on it
@@ -27,7 +27,7 @@ def read_text():
 def ml_predict(data):
     #loading ml model
     model = pickle.load(open('finalized_model.sav', 'rb'))
-    data = OH_encode(data)
+    data = preprocess_final(data)
     return model.predict(data)
 
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     #creating team id Label and Entry and putting them into LabelFrame grid
     Label(radiant_lf, text = 'Radiant team id').grid(row = 0, column = 0)
-    input_radiant_teamid = Entry(radiant_lf)
+    input_radiant_teamid = AutocompleteEntry(radiant_lf, completevalues = TEAMS)
     input_radiant_teamid.grid(row = 0, column = 1)
 
     #creating pick entries and adding them into an array
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     #creating team id Label and Entry and putting them into LabelFrame grid
     Label(dire_lf, text = 'Dire team id').grid(row = 0, column = 0)
-    input_dire_teamid = Entry(dire_lf)
+    input_dire_teamid = AutocompleteEntry(dire_lf, completevalues = TEAMS)
     input_dire_teamid.grid(row = 0, column = 1, padx = (20,0))
 
     #creating pick entries and adding them into an array
