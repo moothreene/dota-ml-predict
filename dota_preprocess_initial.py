@@ -25,11 +25,35 @@ def dict_to_herolist(row, heroes):
     #adding arrays with hero names to DataFrame row
     row['picks_radiant'] = sorted(team_radiant)
     row['picks_dire'] = sorted(team_dire)
-    return row 
+    return row
+
+#adds teams relative winrate based on winrate of every hero of radiant team against every hero of dire team
+def add_matchup_wr(row, heroes, matchups):
+
+    sum_wr = 0
+
+    #for every hero in radiant team adds its winrate percent against every hero in dire team
+    for hero_name_radiant in row['picks_radiant']:
+
+        hero_id_radiant = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant)
+        matchup_current = next(matchup for matchup in matchups if matchup["id"] == hero_id_radiant)
+
+        for hero_name_dire in row['picks_dire']:
+
+            hero_id_dire = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire)
+            sum_wr += matchup_current[str(hero_id_dire)]
+
+    #divides sum of winrates by their number, thus getting average winrate
+    sum_wr /= 25
+
+    row['relative_winrate'] = sum_wr
+    return row
+
 
 #gets team id in pandas row and returns a row with a team name according to it's id
 #row - row in Pandas DataFrame, teams - dictionary with team names and ids
 def team_id_to_name(row, teams):
+
     radiant_team_id = row["radiant_team_id"]
     dire_team_id = row["dire_team_id"]
     team_radiant = next(team["name"] for team in teams if team["id"] == radiant_team_id)
@@ -38,17 +62,7 @@ def team_id_to_name(row, teams):
     #adding team names to DataFrame row
     row['team_radiant'] = team_radiant
     row['team_dire'] = team_dire
-    return row
 
-
-def team_name_to_id(row, teams):
-    radiant_team_name= row["team_radiant"]
-    dire_team_name = row["team_dire"]
-    team_radiant_id = next(team["id"] for team in teams if team["name"] == radiant_team_name)
-    team_dire_id = next(team["id"] for team in teams if team["name"] == dire_team_name)
-
-    row['radiant_team_id'] = team_radiant_id
-    row['dire_team_id'] = team_dire_id
     return row
 
 #splits a columns containing same size arrays into columns containing these arrays' elements

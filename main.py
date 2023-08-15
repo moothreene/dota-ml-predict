@@ -3,7 +3,8 @@ import pandas as pd
 import json
 from tkinter import *
 from ttkwidgets.autocomplete import AutocompleteEntry
-from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS
+from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS, MATCHUPS_JSON, HEROES_JSON
+from dota_preprocess_initial import add_matchup_wr
 
 
 #creates pd dataframe from entry values and predicts value based on it
@@ -13,19 +14,31 @@ def read_text():
     team_data = [input_radiant_teamid.get(), input_dire_teamid.get()]
     picks_data = [(entry.get()) for entry in (radiant_inputs + dire_inputs)]
     data = team_data + picks_data
-
     #creating pandas DataFrame with 1 row, based on entry values
     df = pd.DataFrame([data], columns = TEAM_COLUMNS + HERO_COLUMNS)
 
+    df = df.apply(add_picks_array, picks = picks_data, axis = 'columns')
+    df = df.apply(add_matchup_wr, heroes = HEROES_JSON, matchups = MATCHUPS_JSON, axis = 'columns')
+    df = df.drop(['picks_radiant','picks_dire'], axis = 1)
     #making a prediction from entry data
     prediction = ml_predict(df)
 
     #changing label text to show prediction value
     label_prediction.config(text = prediction)
 
+
+def add_picks_array(row, picks):
+
+    row['picks_radiant'] = picks[:6]
+    row['picks_dire'] = picks[6:]
+
+    return row
+
+
 #predicts outcome based on data by loading ml model
 def ml_predict(data):
     #loading ml model
+    print(data)
     model = pickle.load(open('finalized_model.sav', 'rb'))
     data = preprocess_final(data)
     return model.predict(data)
@@ -42,7 +55,7 @@ if __name__ == "__main__":
     radiant_lf = LabelFrame(root, text = 'Radiant')
 
     #creating team id Label and Entry and putting them into LabelFrame grid
-    Label(radiant_lf, text = 'Radiant team id').grid(row = 0, column = 0)
+    Label(radiant_lf, text = 'Radiant team:').grid(row = 0, column = 0, sticky = W)
     input_radiant_teamid = AutocompleteEntry(radiant_lf, completevalues = TEAMS)
     input_radiant_teamid.grid(row = 0, column = 1)
 
@@ -57,14 +70,14 @@ if __name__ == "__main__":
 
     #creating Label for each pick entry and putting them into LabelFrame grid
     for i in range(5):
-        Label(radiant_lf, text = ('Radiant hero ' + str(i + 1))).grid(row = i+1, column = 0, sticky = W)
+        Label(radiant_lf, text = ('Radiant hero ' + str(i + 1) + ':')).grid(row = i+1, column = 0, sticky = W)
         radiant_inputs[i].grid(row = i + 1, column = 1)
 
     #creating LabelFrame for Dire team
     dire_lf = LabelFrame(root, text = 'Dire')
 
     #creating team id Label and Entry and putting them into LabelFrame grid
-    Label(dire_lf, text = 'Dire team id').grid(row = 0, column = 0)
+    Label(dire_lf, text = 'Dire team:').grid(row = 0, column = 0, sticky = W)
     input_dire_teamid = AutocompleteEntry(dire_lf, completevalues = TEAMS)
     input_dire_teamid.grid(row = 0, column = 1, padx = (20,0))
 
@@ -79,7 +92,7 @@ if __name__ == "__main__":
 
     #creating Label for each pick entry and putting them into LabelFrame grid
     for i in range(5):
-        Label(dire_lf, text = ('Dire hero ' + str(i + 1))).grid(row = i+1, column = 0, sticky = W)
+        Label(dire_lf, text = ('Dire hero ' + str(i + 1) + ':')).grid(row = i+1, column = 0, sticky = W)
         dire_inputs[i].grid( row = i + 1, column = 1, padx = (20,0))
 
     #creating "Enter" button
