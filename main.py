@@ -29,16 +29,15 @@ def read_text():
 
 def add_picks_array(row, picks):
 
-    row['picks_radiant'] = picks[:6]
-    row['picks_dire'] = picks[6:]
+    row['picks_radiant'] = picks[:5]
+    row['picks_dire'] = picks[5:]
 
     return row
 
 
 #predicts outcome based on data by loading ml model
 def ml_predict(data):
-    #loading ml model
-    print(data)
+    #loading ml model   
     model = pickle.load(open('finalized_model.sav', 'rb'))
     data = preprocess_final(data)
     return model.predict(data)

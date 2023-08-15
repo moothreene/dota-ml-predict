@@ -142,14 +142,13 @@ def train_model_split(data, target_col):
     X_train, X_valid, y_train, y_valid = train_test_split(X, y,test_size = 0.2)
 
     #setting up ml model
-    model_forest = RandomForestRegressor(n_estimators = 150,random_state = 0)
+    model_forest = RandomForestRegressor(n_estimators = 1500,random_state = 0)
 
     #OH encoding heroes and teams
     X_train_final, X_valid_final = preprocess_final_split(X_train, X_valid)
     #fitting data into model
     model_forest.fit(X_train_final, y_train)
     preds_forest = model_forest.predict(X_valid_final)
-
     print(mean_absolute_error(y_valid, preds_forest))
 
     #printing MAE

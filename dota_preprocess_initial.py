@@ -46,15 +46,14 @@ def add_matchup_wr(row, heroes, matchups):
             divider -= 0.1
 
         for hero_name_dire in row['picks_dire']:
-
             hero_id_dire = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire)
             sum_wr += matchup_current[str(hero_id_dire)]
             division += divider
 
     #divides sum of winrates by their number, thus getting average winrate
     sum_wr /= division
-
     row['relative_winrate'] = sum_wr
+
     return row
 
 
