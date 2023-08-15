@@ -31,20 +31,28 @@ def dict_to_herolist(row, heroes):
 def add_matchup_wr(row, heroes, matchups):
 
     sum_wr = 0
+    division = 0
 
     #for every hero in radiant team adds its winrate percent against every hero in dire team
     for hero_name_radiant in row['picks_radiant']:
-
+        divider = 1
         hero_id_radiant = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant)
+        hero_roles = next(hero['roles'] for hero in heroes if hero["id"] == hero_id_radiant)
         matchup_current = next(matchup for matchup in matchups if matchup["id"] == hero_id_radiant)
+
+        if 'Support' in hero_roles:
+            divider += 0.1
+        if 'Carry' in hero_roles:
+            divider -= 0.1
 
         for hero_name_dire in row['picks_dire']:
 
             hero_id_dire = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire)
             sum_wr += matchup_current[str(hero_id_dire)]
+            division += divider
 
     #divides sum of winrates by their number, thus getting average winrate
-    sum_wr /= 25
+    sum_wr /= division
 
     row['relative_winrate'] = sum_wr
     return row

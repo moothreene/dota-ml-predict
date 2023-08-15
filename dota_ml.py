@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
@@ -9,12 +10,13 @@ from sklearn.model_selection import train_test_split
 
 #reading hero names from heroes list and adding them into array to use as OH encoder categories
 HEROES = []
-
+HEROES_NAMES = []
 
 #reading json file containing Dota 2 heroes into dictionary
 HEROES_JSON = json.load(open('dota_heroes.json'))
 for hero in HEROES_JSON:
     HEROES.append(hero['name'])
+    HEROES_NAMES.append(hero['localized_name'])
 
 
 #reading team names from teams list and adding them into array to use as OH encoder categories    
@@ -102,6 +104,13 @@ def preprocess_final_split(X_train, X_valid):
     OH_X_train_full = pd.concat([num_X_col_train, OH_X_HEROES_train, OH_X_TEAMS_train], axis = 1)
     OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_HEROES_valid, OH_X_TEAMS_valid], axis = 1)
 
+    '''
+    OH_X_TEAMS_train, OH_X_TEAMS_valid = OH_encode_train(X_train, X_valid, TEAM_COLUMNS, TEAMS)
+    num_X_col_train = X_train.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
+    num_X_col_valid = X_valid.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
+    OH_X_train_full = pd.concat([num_X_col_train, OH_X_TEAMS_train], axis = 1)
+    OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_TEAMS_valid], axis = 1)
+    '''
 
     return OH_X_train_full, OH_X_valid_full
     
@@ -110,7 +119,7 @@ def preprocess_final_split(X_train, X_valid):
 #data - data to train on, col - target column
 def train_model(data, target_col):
     #dividing DataFrame into y - target column and X - the rest
-    X = data.drop([target_col,'match_id'], axis = 1)
+    X = data.drop([target_col], axis = 1)
     y = data[target_col] 
 
     #setting up ml model
@@ -118,7 +127,6 @@ def train_model(data, target_col):
 
     #OH encoding heroes and teams
     X_final = preprocess_final(X)
-
     #fitting data into model
     model.fit(X_final, y)
 
@@ -129,19 +137,19 @@ def train_model(data, target_col):
 def train_model_split(data, target_col):
     
     #dividing DataFrame into y - target column and X - the rest
-    X = data.drop([target_col,'match_id'], axis = 1)
+    X = data.drop([target_col], axis = 1)
     y = data[target_col] 
-    X_train, X_valid, y_train, y_valid = train_test_split(X, y,test_size = 0.1)
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y,test_size = 0.2)
 
     #setting up ml model
-    model = RandomForestRegressor(random_state=0)
+    model_forest = RandomForestRegressor(n_estimators = 150,random_state = 0)
 
     #OH encoding heroes and teams
     X_train_final, X_valid_final = preprocess_final_split(X_train, X_valid)
-
     #fitting data into model
-    model.fit(X_train_final, y_train)
-    preds = model.predict(X_valid_final)
+    model_forest.fit(X_train_final, y_train)
+    preds_forest = model_forest.predict(X_valid_final)
+
+    print(mean_absolute_error(y_valid, preds_forest))
 
     #printing MAE
-    print(mean_absolute_error(y_valid, preds))

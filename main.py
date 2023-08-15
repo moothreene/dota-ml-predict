@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from tkinter import *
 from ttkwidgets.autocomplete import AutocompleteEntry
-from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS, MATCHUPS_JSON, HEROES_JSON
+from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS, MATCHUPS_JSON, HEROES_JSON, HEROES_NAMES
 from dota_preprocess_initial import add_matchup_wr
 
 

@@ -3,6 +3,7 @@ import json
 import time
 import os
 
+
 def get_matchups_wr(id, matchups):
     matchups_wr = {'id' : id}
     for matchup in matchups:
@@ -53,5 +54,12 @@ def find_matches(teamA, teamB):
         if match['teamawin'] == True:
             wins += 1
 
-    print(out)
-    print(wins)
+
+def heroes():
+    url = 'https://api.opendota.com/api/heroes'
+    response = requests.get(url)
+    out = response.json()
+    file = open("heroes_from_api.json","w")
+    file.write(json.dumps(out, indent=2))
+
+heroes()
