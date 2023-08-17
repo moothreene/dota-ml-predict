@@ -62,4 +62,46 @@ def heroes():
     file = open("heroes_from_api.json","w")
     file.write(json.dumps(out, indent=2))
 
-heroes()
+
+def explorer():
+    query_league = """
+                    SELECT
+                    match_id,
+                    radiant_win,
+                    radiant_team_id,
+                    dire_team_id,
+                    picks_bans
+                    FROM matches
+                    JOIN leagues using(leagueid)
+                    WHERE TRUE
+                    AND matches.leagueid = 15475
+                    AND matches.start_time >= extract(epoch from timestamp '2023-07-05T16:00:51.067Z')
+                    GROUP BY matches.match_id
+                    HAVING count(distinct match_id) >= 1
+                    ORDER BY matches.match_id
+                """
+    query_reg = """
+                    SELECT
+                    match_id,
+                    radiant_win,
+                    picks_bans
+                    FROM matches
+                    WHERE TRUE
+                    AND matches.start_time >= extract(epoch from timestamp '2023-01-01T00:00:00.000Z')
+                    AND NOT picks_bans IS NULL
+                    GROUP BY matches.match_id
+                    HAVING count(distinct match_id) >= 1
+                    ORDER BY matches.match_id
+                """
+
+    params_league = {"sql" : query_league}
+    params_reg = {"sql" : query_reg}
+    url = 'https://api.opendota.com/api/explorer'
+    response = requests.get(url, params = params_reg)
+    out = response.json()
+    print(out["rowCount"])
+    file = open("parsed_matches.json","w")
+    file.write(json.dumps(out["rows"], indent=2))
+
+
+explorer()
