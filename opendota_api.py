@@ -80,14 +80,14 @@ def explorer():
                     HAVING count(distinct match_id) >= 1
                     ORDER BY matches.match_id
                 """
-    query_reg = """
+    query_2022 = """
                     SELECT
                     match_id,
                     radiant_win,
                     picks_bans
                     FROM matches
                     WHERE TRUE
-                    AND matches.start_time >= extract(epoch from timestamp '2023-01-01T00:00:00.000Z')
+                    AND matches.start_time >= extract(epoch from timestamp '2022-01-01T00:00:00.000Z')
                     AND NOT picks_bans IS NULL
                     GROUP BY matches.match_id
                     HAVING count(distinct match_id) >= 1
@@ -95,7 +95,7 @@ def explorer():
                 """
 
     params_league = {"sql" : query_league}
-    params_reg = {"sql" : query_reg}
+    params_reg = {"sql" : query_2022}
     url = 'https://api.opendota.com/api/explorer'
     response = requests.get(url, params = params_reg)
     out = response.json()
