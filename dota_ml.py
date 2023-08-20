@@ -39,7 +39,7 @@ TEAM_COLUMNS = ['team_radiant', 'team_dire']
 
 
 #reading json file containing Dota 2 hero matchups into dictionary
-MATCHUPS_JSON = json.load(open('dota_matchup_winrates.json'))
+MATCHUPS_JSON = json.load(open('dota_winrates_by_hero.json'))
 
 
 #OH encodes data that was split for evaluation purposes and returns encoded data
@@ -104,6 +104,7 @@ def preprocess_final_split(X_train, X_valid):
     OH_X_train_full = pd.concat([num_X_col_train, OH_X_HEROES_train, OH_X_TEAMS_train], axis = 1)
     OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_HEROES_valid, OH_X_TEAMS_valid], axis = 1)
 
+
     '''
     OH_X_TEAMS_train, OH_X_TEAMS_valid = OH_encode_train(X_train, X_valid, TEAM_COLUMNS, TEAMS)
     num_X_col_train = X_train.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
@@ -142,7 +143,7 @@ def train_model_split(data, target_col):
     X_train, X_valid, y_train, y_valid = train_test_split(X, y,test_size = 0.2)
 
     #setting up ml model
-    model_forest = RandomForestRegressor(n_estimators = 1500,random_state = 0)
+    model_forest = RandomForestRegressor(random_state = 0)
 
     #OH encoding heroes and teams
     X_train_final, X_valid_final = preprocess_final_split(X_train, X_valid)

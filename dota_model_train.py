@@ -21,10 +21,11 @@ pd_data = pd_data.drop(['picks_radiant','picks_dire'], axis = 1)
 pd_data = pd_data.apply(team_id_to_name, teams = TEAMS_JSON, axis = 'columns')
 pd_data = pd_data.drop(['radiant_team_id','dire_team_id','match_id'], axis = 1)
 
+print(pd_data.head())
 #training model on preprocessed data
-train_model(pd_data, 'radiant_win')
+#train_model(pd_data, 'radiant_win')
 
-#train_model_split(pd_data, 'radiant_win')
+train_model_split(pd_data, 'radiant_win')
 
 
     

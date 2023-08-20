@@ -29,30 +29,45 @@ def dict_to_herolist(row, heroes):
 
 #adds teams relative winrate based on winrate of every hero of radiant team against every hero of dire team
 def add_matchup_wr(row, heroes, matchups):
-
-    sum_wr = 0
+    team_wr_radiant = 0
+    team_wr_dire = 0
+    enemy_wr = 0
     division = 0
 
     #for every hero in radiant team adds its winrate percent against every hero in dire team
     for hero_name_radiant in row['picks_radiant']:
+        num_wr_rad = 0
+        num_wr_dir = 0
         divider = 1
         hero_id_radiant = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant)
         hero_roles = next(hero['roles'] for hero in heroes if hero["id"] == hero_id_radiant)
-        matchup_current = next(matchup for matchup in matchups if matchup["id"] == hero_id_radiant)
 
         if 'Support' in hero_roles:
             divider += 0.1
         if 'Carry' in hero_roles:
             divider -= 0.1
 
+        for hero_name_radiant_teammate in row["picks_radiant"]:
+            hero_id_radiant_teammate = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant_teammate)
+            team_wr_radiant += matchups[str(hero_id_radiant)][str(hero_id_radiant_teammate)]["with"]
+            num_wr_rad  += 1
+
         for hero_name_dire in row['picks_dire']:
             hero_id_dire = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire)
-            sum_wr += matchup_current[str(hero_id_dire)]
+            enemy_wr += matchups[str(hero_id_radiant)][str(hero_id_dire)]["against"]
             division += divider
 
+            for hero_name_dire_teammate in row["picks_dire"]:
+                hero_id_dire_teammate = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire_teammate)
+                team_wr_dire += matchups[str(hero_id_dire)][str(hero_id_dire_teammate)]["with"]
+                num_wr_dir += 1
     #divides sum of winrates by their number, thus getting average winrate
-    sum_wr /= division
-    row['relative_winrate'] = sum_wr
+    enemy_wr /= division
+    team_wr_dire /= 125
+    team_wr_radiant /= 25
+    row['relative_winrate'] = enemy_wr
+    row['dire_winrate'] = team_wr_dire
+    row['radiant_winrate'] = team_wr_radiant
 
     return row
 
