@@ -28,49 +28,74 @@ def dict_to_herolist(row, heroes):
     return row
 
 #adds teams relative winrate based on winrate of every hero of radiant team against every hero of dire team
+#row - row in Pandas DataFrame, heroes - json with heroes names and ids, matchups - json with hero matchups: wins and total games played
 def add_matchup_wr(row, heroes, matchups):
+
+    #initializing winrate variables
     team_wr_radiant = 0
     team_wr_dire = 0
-    enemy_wr = 0
+    relative_wr = 0
     division = 0
 
-    #for every hero in radiant team adds its winrate percent against every hero in dire team
+    #cycling through radiant team heroes
     for hero_name_radiant in row['picks_radiant']:
-        num_wr_rad = 0
-        num_wr_dir = 0
+
+        #initializing divider for weighted winrate
         divider = 1
+        #getting hero id and roles
         hero_id_radiant = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant)
         hero_roles = next(hero['roles'] for hero in heroes if hero["id"] == hero_id_radiant)
 
+        #if a hero is support, his winrate weights less and otherwise
         if 'Support' in hero_roles:
             divider += 0.1
         if 'Carry' in hero_roles:
             divider -= 0.1
 
+        #cycling through radiant team once again to get winrates of radiant heroes with their teammates
         for hero_name_radiant_teammate in row["picks_radiant"]:
             hero_id_radiant_teammate = next(hero['id'] for hero in heroes if hero["name"] == hero_name_radiant_teammate)
             team_wr_radiant += matchups[str(hero_id_radiant)][str(hero_id_radiant_teammate)]["with"]
-            num_wr_rad  += 1
 
+        #cycling through dire team to get winrates of radiant heroes against them
         for hero_name_dire in row['picks_dire']:
             hero_id_dire = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire)
-            enemy_wr += matchups[str(hero_id_radiant)][str(hero_id_dire)]["against"]
+            relative_wr += matchups[str(hero_id_radiant)][str(hero_id_dire)]["against"]
             division += divider
 
+            #cycling through dire team once again to get winrates of dire heroes with their teammates
             for hero_name_dire_teammate in row["picks_dire"]:
                 hero_id_dire_teammate = next(hero['id'] for hero in heroes if hero["name"] == hero_name_dire_teammate)
                 team_wr_dire += matchups[str(hero_id_dire)][str(hero_id_dire_teammate)]["with"]
-                num_wr_dir += 1
-    #divides sum of winrates by their number, thus getting average winrate
-    enemy_wr /= division
+
+    #divides sum of winrates by divider, thus getting weighted average winrate
+    relative_wr /= division
+
+    #dividing winrate sum of radiant and dire team by a number of winrates to get average winrate
     team_wr_dire /= 125
     team_wr_radiant /= 25
-    row['relative_winrate'] = enemy_wr
+
+    #adding new values to DataFrame row
+    row['relative_winrate'] = relative_wr
     row['dire_winrate'] = team_wr_dire
     row['radiant_winrate'] = team_wr_radiant
 
     return row
 
+#gets team id in pandas row and returns a row with a team rank according to it's id
+#row - row in Pandas DataFrame, teams - dictionary with team names, ids and ranks
+def team_id_to_rank(row, teams):
+
+    radiant_team_id = row["radiant_team_id"]
+    dire_team_id = row["dire_team_id"]
+    team_radiant = next(team["rank"] for team in teams if team["id"] == radiant_team_id)
+    team_dire = next(team["rank"] for team in teams if team["id"] == dire_team_id)
+
+    #adding team ranks to DataFrame row
+    row['rank_team_radiant'] = int(team_radiant)
+    row['rank_team_dire'] = int(team_dire)
+
+    return row
 
 #gets team id in pandas row and returns a row with a team name according to it's id
 #row - row in Pandas DataFrame, teams - dictionary with team names and ids

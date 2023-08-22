@@ -1,114 +1,142 @@
 [
     {
        "id":8597976,
-       "name":"Talon"
+       "name":"Talon",
+       "rank":1321
     },
     {
        "id":15,
-       "name":"PSG.LGD"
+       "name":"PSG.LGD",
+       "rank":1259
     },
     {
        "id":2163,
-       "name":"Team Liquid"
+       "name":"Team Liquid",
+       "rank":1349
     },
     {
        "id":7119388,
-       "name":"Team Spirit"
+       "name":"Team Spirit",
+       "rank":1378
     },
     {
        "id":8291895,
-       "name":"Tundra Esports"
+       "name":"Tundra Esports",
+       "rank":1197
     },
     {
        "id":1838315,
-       "name":"Team Secret"
+       "name":"Team Secret",
+       "rank":1199
     },
     {
        "id":39,
-       "name":"Shopify Rebellion"
+       "name":"Shopify Rebellion",
+       "rank":1165
     },
     {
        "id":2586976,
-       "name":"OG"
+       "name":"OG",
+       "rank":1224
     },
     {
        "id":7422789,
-       "name":"9Pandas"
+       "name":"9Pandas",
+       "rank":1281
     },
     {
        "id":8255888,
-       "name":"BetBoom Team"
+       "name":"BetBoom Team",
+       "rank":1322
     },
     {
        "id":8605863,
-       "name":"Entity"
+       "name":"Entity",
+       "rank":1135
     },
     {
        "id":6209166,
-       "name":"Team Aster"
+       "name":"Team Aster",
+       "rank":1250
     },
     {
        "id":8599101,
-       "name":"Gaimin Gladiators"
+       "name":"Gaimin Gladiators",
+       "rank":1367
     },
     {
        "id":8260983,
-       "name":"TSM"
+       "name":"TSM",
+       "rank":1367
     },
     {
        "id":8255756,
-       "name":"Evil Geniuses"
+       "name":"Evil Geniuses",
+       "rank":1200
     },
     {
        "id":8254400,
-       "name":"beastcoast"
+       "name":"beastcoast",
+       "rank":1168
     },
     {
        "id":7554697,
-       "name":"Nigma Galaxy"
+       "name":"Nigma Galaxy",
+       "rank":1146
     },
     {
        "id":8894818,
-       "name":"Quest Esports"
+       "name":"Quest Esports",
+       "rank":1286
     },
     {
        "id":9114743,
-       "name":"dota enjoyer"
+       "name":"dota enjoyer",
+       "rank":1000
     },
     {
        "id":8254145,
-       "name":"Execration"
+       "name":"Execration",
+       "rank":1110
     },
     {
        "id":8214850,
-       "name":"BLEED"
+       "name":"BLEED",
+       "rank":1137
     },
     {
        "id":8728920,
-       "name":"nouns"
+       "name":"nouns",
+       "rank":1125
     },
     {
        "id":8574561,
-       "name":"Azure Ray"
+       "name":"Azure Ray",
+       "rank":1198
     },
     {
        "id":8668460,
-       "name":"Blacklist Rivalry"
+       "name":"Blacklist Rivalry",
+       "rank":1121
     },
     {
        "id":5,
-       "name":"INVICTUS GAMING"
+       "name":"INVICTUS GAMING",
+       "rank":1112
     },
     {
        "id":8261500,
-       "name":"Xtreme Gaming"
+       "name":"Xtreme Gaming",
+       "rank":1200
     },
     {
        "id":8724984,
-       "name":"Virtus.pro"
+       "name":"Virtus.pro",
+       "rank":1124
     },
     {
         "id":9080826,
-        "name":"Twisted Minds"
+        "name":"Twisted Minds",
+        "rank":1002
     }
 ]			
