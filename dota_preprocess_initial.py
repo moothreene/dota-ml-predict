@@ -112,6 +112,19 @@ def team_id_to_name(row, teams):
 
     return row
 
+def team_name_to_id(row, teams):
+
+    radiant_team_name = row["team_radiant"]
+    dire_team_name = row["team_dire"]
+    team_radiant = next(team["id"] for team in teams if team["name"] == radiant_team_name)
+    team_dire = next(team["id"] for team in teams if team["name"] == dire_team_name)
+
+    #adding team names to DataFrame row
+    row['radiant_team_id'] = team_radiant
+    row['dire_team_id'] = team_dire
+
+    return row
+
 #splits a columns containing same size arrays into columns containing these arrays' elements
 #df - DataFrame, col_name - name of a target column, num - length of arrays in this column
 def split_array_col(df, col_name, num):

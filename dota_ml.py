@@ -82,12 +82,10 @@ def preprocess_final(X):
 
     #OneHotEncoding X
     OH_X_HEROES = OH_encode(X, HERO_COLUMNS, HEROES)
-    OH_X_TEAMS = OH_encode(X, TEAM_COLUMNS, TEAMS)
-
 
     #getting number columns from original DataFrame and adding them to encoded object columns
-    num_X_col = X.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
-    OH_X_full = pd.concat([num_X_col, OH_X_HEROES, OH_X_TEAMS], axis = 1)
+    num_X_col = X.drop(HERO_COLUMNS, axis = 1)
+    OH_X_full = pd.concat([num_X_col, OH_X_HEROES], axis = 1)
 
     return OH_X_full
 
@@ -95,23 +93,13 @@ def preprocess_final_split(X_train, X_valid):
 
     #OneHotEncoding X
     OH_X_HEROES_train, OH_X_HEROES_valid = OH_encode_train(X_train, X_valid, HERO_COLUMNS, HEROES)
-    OH_X_TEAMS_train, OH_X_TEAMS_valid = OH_encode_train(X_train, X_valid, TEAM_COLUMNS, TEAMS)
-
 
     #getting number columns from original DataFrame and adding them to encoded object columns
-    num_X_col_train = X_train.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
-    num_X_col_valid = X_valid.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
-    OH_X_train_full = pd.concat([num_X_col_train, OH_X_HEROES_train, OH_X_TEAMS_train], axis = 1)
-    OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_HEROES_valid, OH_X_TEAMS_valid], axis = 1)
+    num_X_col_train = X_train.drop(HERO_COLUMNS, axis = 1)
+    num_X_col_valid = X_valid.drop(HERO_COLUMNS, axis = 1)
+    OH_X_train_full = pd.concat([num_X_col_train, OH_X_HEROES_train], axis = 1)
+    OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_HEROES_valid], axis = 1)
 
-
-    '''
-    OH_X_TEAMS_train, OH_X_TEAMS_valid = OH_encode_train(X_train, X_valid, TEAM_COLUMNS, TEAMS)
-    num_X_col_train = X_train.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
-    num_X_col_valid = X_valid.drop(HERO_COLUMNS+TEAM_COLUMNS, axis = 1)
-    OH_X_train_full = pd.concat([num_X_col_train, OH_X_TEAMS_train], axis = 1)
-    OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_TEAMS_valid], axis = 1)
-    '''
 
     return OH_X_train_full, OH_X_valid_full
     

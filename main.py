@@ -3,8 +3,8 @@ import pandas as pd
 import json
 from tkinter import *
 from ttkwidgets.autocomplete import AutocompleteEntry
-from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS, MATCHUPS_JSON, HEROES_JSON, HEROES_NAMES
-from dota_preprocess_initial import add_matchup_wr
+from dota_ml import preprocess_final, TEAM_COLUMNS, HERO_COLUMNS, HEROES, TEAMS, TEAMS_JSON, MATCHUPS_JSON, HEROES_JSON, HEROES_NAMES
+from dota_preprocess_initial import add_matchup_wr, team_id_to_rank, team_name_to_id
 
 
 #creates pd dataframe from entry values and predicts value based on it
@@ -20,7 +20,15 @@ def read_text():
     df = df.apply(add_picks_array, picks = picks_data, axis = 'columns')
     df = df.apply(add_matchup_wr, heroes = HEROES_JSON, matchups = MATCHUPS_JSON, axis = 'columns')
     df = df.drop(['picks_radiant','picks_dire'], axis = 1)
+
+    df = df.apply(team_name_to_id, teams = TEAMS_JSON, axis = 'columns')
+    df = df.apply(team_id_to_rank, teams = TEAMS_JSON, axis = 'columns')
+    df = df.drop(['radiant_team_id','dire_team_id'], axis = 1)
+    df = df.drop(['team_radiant', 'team_dire'], axis = 1)
+
+
     #making a prediction from entry data
+    print(df.head())
     prediction = ml_predict(df)
 
     #changing label text to show prediction value
