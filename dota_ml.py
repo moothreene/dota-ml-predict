@@ -1,5 +1,4 @@
 from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
@@ -35,8 +34,13 @@ HERO_COLUMNS = ['picks_radiant_1', 'picks_radiant_2', 'picks_radiant_3','picks_r
 
 
 #columns for team names
-TEAM_COLUMNS = ['team_radiant', 'team_dire']
+TEAM_COLUMNS = {
+    "name": ['team_radiant', 'team_dire'],
+    "rank": ['radiant_team_rank', 'dire_team_rank']
+}
 
+
+TEAM_RANK_COLUMNS = []
 
 #reading json file containing Dota 2 hero matchups into dictionary
 MATCHUPS_JSON = json.load(open('dota_winrates_by_hero.json'))
@@ -121,6 +125,7 @@ def train_model(data, target_col):
 
     #saving model to disk for later use
     pickle.dump(model, open('finalized_model.sav', 'wb'))
+    print("complete!")
 
 
 def train_model_split(data, target_col):
@@ -141,3 +146,8 @@ def train_model_split(data, target_col):
     print(mean_absolute_error(y_valid, preds_forest))
 
     #printing MAE
+
+def make_prediction(data):
+    data = preprocess_final(data)
+    model = pickle.load(open('finalized_model.sav', 'rb'))
+    model.predict(data)

@@ -8,7 +8,7 @@ def dict_to_herolist(row, heroes):
     team_radiant = []
     team_dire = []
 
-    if row['picks_bans'] != None:
+    if row['picks_bans'] is not None:
         for pick_ban in picks_data:
 
             #selecting only picked heroes
@@ -92,8 +92,8 @@ def team_id_to_rank(row, teams):
     team_dire = next(team["rank"] for team in teams if team["id"] == dire_team_id)
 
     #adding team ranks to DataFrame row
-    row['rank_team_radiant'] = int(team_radiant)
-    row['rank_team_dire'] = int(team_dire)
+    row['radiant_team_rank'] = int(team_radiant)
+    row['dire_team_rank'] = int(team_dire)
 
     return row
 
@@ -107,15 +107,15 @@ def team_id_to_name(row, teams):
     team_dire = next(team["name"] for team in teams if team["id"] == dire_team_id)
 
     #adding team names to DataFrame row
-    row['team_radiant'] = team_radiant
-    row['team_dire'] = team_dire
+    row['radiant_team_name'] = team_radiant
+    row['dire_team_name'] = team_dire
 
     return row
 
 def team_name_to_id(row, teams):
 
-    radiant_team_name = row["team_radiant"]
-    dire_team_name = row["team_dire"]
+    radiant_team_name = row["radiant_team_name"]
+    dire_team_name = row["dire_team_name"]
     team_radiant = next(team["id"] for team in teams if team["name"] == radiant_team_name)
     team_dire = next(team["id"] for team in teams if team["name"] == dire_team_name)
 

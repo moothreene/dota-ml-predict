@@ -35,13 +35,13 @@ def get_parsed_matchups(matches, matchups):
 
         for pick_first in match["picks_bans"]:
 
-            if pick_first["is_pick"] == True:
+            if pick_first["is_pick"] is True:
 
                 pick_first_hero_id = pick_first["hero_id"]
 
                 for pick_second in match["picks_bans"]:
 
-                    if pick_second["is_pick"] == True:
+                    if pick_second["is_pick"] is True:
 
                         pick_second_hero_id = pick_second["hero_id"]
 
