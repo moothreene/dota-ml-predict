@@ -30,7 +30,7 @@ QUERY_2022 = """
                     picks_bans
                     FROM matches
                     WHERE TRUE
-                    AND matches.start_time >= extract(epoch from timestamp '2022-01-01T00:00:00.000Z')
+                    AND matches.start_time >= extract(epoch from timestamp '2022-08-01T00:00:00.000Z')
                     AND NOT picks_bans IS NULL
                     GROUP BY matches.match_id
                     HAVING count(distinct match_id) >= 1
