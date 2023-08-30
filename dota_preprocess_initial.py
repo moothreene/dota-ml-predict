@@ -1,7 +1,33 @@
 import pandas as pd
-
+from dota_ml import *
 #reads a dictionary of picks/bans in pandas row and returns a row with str array, containing heroes names, according to their id
 #row - row in Pandas DataFrame, heroes - dictionary with heroes names and ids
+
+
+def preprocess(pd_data, winrate = True, pick_bans = True, id_to_rank = True):
+
+    if pick_bans is True:
+        #transforming picks_bans column from match data into an array of picked heroes names
+        pd_data = pd_data.apply(dict_to_herolist, heroes = HEROES_JSON, axis = 'columns')
+        pd_data = pd_data.drop(['picks_bans'],axis = 1)
+
+    if winrate is True:
+        #adding matchup relative winrate
+        pd_data = pd_data.apply(add_matchup_wr, heroes = HEROES_JSON, matchups = MATCHUPS_JSON, axis = 'columns')
+        
+    if id_to_rank is True:
+        #changing team IDs to team ranks
+        pd_data = pd_data.apply(team_id_to_rank, teams = TEAMS_JSON, axis = 'columns')
+        pd_data = pd_data.drop(['radiant_team_id','dire_team_id'], axis = 1)
+
+    #splitting heroes names array into separate columns each containing one hero name    
+    split_array_col(pd_data, 'picks_radiant', 5)
+    split_array_col(pd_data, 'picks_dire', 5)
+    pd_data = pd_data.drop(['picks_radiant','picks_dire', 'match_id' ], errors='ignore', axis = 1)
+
+    return pd_data
+
+
 def dict_to_herolist(row, heroes):
 
     picks_data = row['picks_bans']
