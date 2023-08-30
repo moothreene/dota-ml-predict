@@ -35,6 +35,8 @@ if __name__ == "__main__":
         df[TEAM_COLUMNS["rank"]] = df[TEAM_COLUMNS["rank"]].apply(pd.to_numeric)
         print(df.dtypes)
         #make_prediction(df)
+    if mode == "k":
+        train_model_split_keras(pd_data, 'radiant_win')
 
 
 #train_model_split(pd_data, 'radiant_win')

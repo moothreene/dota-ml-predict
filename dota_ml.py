@@ -5,6 +5,8 @@ import pandas as pd
 import pickle
 import json
 from sklearn.model_selection import train_test_split
+from tensorflow import keras
+from keras import layers
 
 
 #reading hero names from heroes list and adding them into array to use as OH encoder categories
@@ -144,6 +146,44 @@ def train_model_split(data, target_col):
     model_forest.fit(X_train_final, y_train)
     preds_forest = model_forest.predict(X_valid_final)
     print(mean_absolute_error(y_valid, preds_forest))
+
+
+
+def train_model_split_keras(data, target_col):
+    
+    #dividing DataFrame into y - target column and X - the rest
+    X = data.drop([target_col], axis = 1)
+    y = data[target_col] 
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y,test_size = 0.2)
+
+    #setting up ml model
+
+    #OH encoding heroes and teams
+    X_train_final, X_valid_final = preprocess_final_split(X_train, X_valid)
+
+    model_keras = keras.Sequential([
+        layers.Dense(256, activation='relu', input_shape=[1245]),
+        layers.Dense(256, activation='relu'),
+        layers.Dense(256, activation='relu'),
+        layers.Dense(256, activation='relu'),
+        layers.Dense(1)
+    ])
+    model_keras.compile(
+        optimizer="adam",
+        loss="mae"
+    )
+    history = model_keras.fit(
+        X_train_final, y_train,
+        validation_data=(X_valid_final, y_valid),
+        batch_size=256,
+        epochs=250
+    )
+    history_df = pd.DataFrame(history.history)
+# use Pandas native plot method
+    #fitting data into model
+
+
+
 
     #printing MAE
 
