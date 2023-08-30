@@ -93,6 +93,8 @@ def preprocess_final(X):
     num_X_col = X.drop(HERO_COLUMNS, axis = 1)
     OH_X_full = pd.concat([num_X_col, OH_X_HEROES], axis = 1)
 
+    OH_X_full.columns = OH_X_full.columns.astype(str)
+
     return OH_X_full
 
 def preprocess_final_split(X_train, X_valid):
@@ -103,9 +105,12 @@ def preprocess_final_split(X_train, X_valid):
     #getting number columns from original DataFrame and adding them to encoded object columns
     num_X_col_train = X_train.drop(HERO_COLUMNS, axis = 1)
     num_X_col_valid = X_valid.drop(HERO_COLUMNS, axis = 1)
+
     OH_X_train_full = pd.concat([num_X_col_train, OH_X_HEROES_train], axis = 1)
     OH_X_valid_full = pd.concat([num_X_col_valid, OH_X_HEROES_valid], axis = 1)
 
+    OH_X_train_full.columns = OH_X_train_full.columns.astype(str)
+    OH_X_valid_full.columns = OH_X_valid_full.columns.astype(str)
 
     return OH_X_train_full, OH_X_valid_full
     
@@ -122,6 +127,7 @@ def train_model(data, target_col):
 
     #OH encoding heroes and teams
     X_final = preprocess_final(X)
+    X_final = X_final.reindex(sorted(X_final.columns), axis=1)
     #fitting data into model
     model.fit(X_final, y)
 
@@ -185,9 +191,8 @@ def train_model_split_keras(data, target_col):
 
 
 
-    #printing MAE
-
 def make_prediction(data):
     data = preprocess_final(data)
+    data = data.reindex(sorted(data.columns), axis=1)
     model = pickle.load(open('finalized_model.sav', 'rb'))
-    model.predict(data)
+    print(model.predict(data))
