@@ -195,4 +195,4 @@ def make_prediction(data):
     data = preprocess_final(data)
     data = data.reindex(sorted(data.columns), axis=1)
     model = pickle.load(open('finalized_model.sav', 'rb'))
-    print(model.predict(data))
+    return(model.predict(data)[0])
