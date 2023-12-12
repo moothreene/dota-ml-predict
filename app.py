@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 from dota_preprocess_initial import *
 from dota_ml import *
+import os
 
 app=Flask(__name__)
 CORS(app)
@@ -25,5 +26,7 @@ def get_pred(data):
     return jsonify(pred), 200
 
 if(__name__) == "__main__":
+    app.debug = False
     from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
+    port = int(os.environ.get('PORT', 33507))
+    serve(app, port=port)
